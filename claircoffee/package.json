@@ -1,0 +1,13 @@
+{
+  "name": "claircoffee",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "dev": "pnpm --filter @claircoffee/api dev",
+    "db:migrate": "pnpm --filter @claircoffee/api migrate",
+    "db:seed": "pnpm --filter @claircoffee/api seed",
+    "build": "pnpm --filter @claircoffee/api build && pnpm --filter @claircoffee/utils build",
+    "test": "pnpm --filter @claircoffee/utils test"
+  }
+}
