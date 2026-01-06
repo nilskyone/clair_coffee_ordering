@@ -1,6 +1,10 @@
 import { createApiClient } from "@claircoffee/api-client";
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+const defaultApiBaseUrl =
+  typeof window !== "undefined" && window.location.protocol === "https:"
+    ? `${window.location.origin}/api`
+    : "http://localhost:3001";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl;
 
 export function useApiClient() {
   return createApiClient({
