@@ -4,10 +4,14 @@
   "version": "0.1.0",
   "packageManager": "pnpm@9.12.0",
   "scripts": {
-    "dev": "pnpm --filter @claircoffee/api dev",
+    "dev": "concurrently -k -n api,pos,kitchen,display,customer,admin \"pnpm --filter @claircoffee/api dev\" \"pnpm --filter @claircoffee/pos dev\" \"pnpm --filter @claircoffee/kitchen dev\" \"pnpm --filter @claircoffee/display dev\" \"pnpm --filter @claircoffee/customer dev\" \"pnpm --filter @claircoffee/admin dev\"",
+    "dev:web": "concurrently -k -n pos,kitchen,display,customer,admin \"pnpm --filter @claircoffee/pos dev\" \"pnpm --filter @claircoffee/kitchen dev\" \"pnpm --filter @claircoffee/display dev\" \"pnpm --filter @claircoffee/customer dev\" \"pnpm --filter @claircoffee/admin dev\"",
     "db:migrate": "pnpm --filter @claircoffee/api migrate",
     "db:seed": "pnpm --filter @claircoffee/api seed",
-    "build": "pnpm --filter @claircoffee/api build && pnpm --filter @claircoffee/utils build",
+    "build": "pnpm --filter @claircoffee/api build && pnpm --filter @claircoffee/utils build && pnpm --filter @claircoffee/pos build && pnpm --filter @claircoffee/kitchen build && pnpm --filter @claircoffee/display build && pnpm --filter @claircoffee/customer build && pnpm --filter @claircoffee/admin build",
     "test": "pnpm --filter @claircoffee/utils test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
   }
 }
