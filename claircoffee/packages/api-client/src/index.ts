@@ -274,7 +274,7 @@ export function createSocketClient({ baseUrl, token, branchId }: SocketOptions):
     auth: token ? { token } : undefined
   });
   if (branchId) {
-    socket.emit("join", { room: `branch:${branchId}` });
+    socket.emit("join", { branchId });
   }
   return socket;
 }
