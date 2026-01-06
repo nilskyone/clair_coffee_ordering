@@ -1,6 +1,6 @@
-# Clair Coffee Ordering (Backend)
+# Clair Coffee Ordering (Backend + Frontends)
 
-Backend service for an on-prem coffee shop ordering + inventory system.
+Backend service and frontend apps for an on-prem coffee shop ordering + inventory system.
 
 ## Requirements
 - Node.js 20+
@@ -12,6 +12,38 @@ Backend service for an on-prem coffee shop ordering + inventory system.
 pnpm install
 pnpm dev
 ```
+
+## Frontend apps (LAN dev)
+The frontend apps run via Vite and are bound to `0.0.0.0` so they can be opened from tablets and displays on the same LAN.
+
+1) Copy env files and update LAN IP:
+```bash
+cp apps/pos/.env.example apps/pos/.env
+cp apps/kitchen/.env.example apps/kitchen/.env
+cp apps/display/.env.example apps/display/.env
+cp apps/customer/.env.example apps/customer/.env
+cp apps/admin/.env.example apps/admin/.env
+```
+
+Edit each `.env`:
+```
+VITE_API_BASE_URL=http://<LAN_IP>:3001
+VITE_WS_URL=http://<LAN_IP>:3001
+```
+
+2) Run all apps:
+```bash
+pnpm dev
+```
+
+3) Open from LAN devices:
+- POS: `http://<LAN_IP>:5173`
+- Kitchen: `http://<LAN_IP>:5174/kitchen`
+- Display: `http://<LAN_IP>:5175/display`
+- Customer tracking: `http://<LAN_IP>:5176/track/<token>`
+- Admin: `http://<LAN_IP>:5177/admin/login`
+
+> Tip: For POS kiosk mode set `MODE=KIOSK` in `apps/pos/.env`, or append `?mode=kiosk` to the URL for dev.
 
 ### MySQL via Docker
 ```bash
