@@ -1,7 +1,11 @@
 import { createApiClient } from "@claircoffee/api-client";
 import { useAuthStore } from "../store/auth";
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+const defaultApiBaseUrl =
+  typeof window !== "undefined" && window.location.protocol === "https:"
+    ? `${window.location.origin}/api`
+    : "http://localhost:3001";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl;
 
 export function useApiClient() {
   const token = useAuthStore((state) => state.token);

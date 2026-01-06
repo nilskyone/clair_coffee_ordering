@@ -13,6 +13,24 @@ pnpm install
 pnpm dev
 ```
 
+## Quick Install (Ubuntu)
+Run the on-prem installer locally (Ubuntu 22.04+ or Debian-based):
+```bash
+curl -fsSL file://$(pwd)/deployment/scripts/install-ubuntu-onprem.sh | bash
+```
+
+Flags:
+- `INSTALL_UFW=1` to enable/configure UFW (allows 80/443 and optional 3001).
+- `EXPOSE_API_PORT=1` to open port 3001/tcp when UFW is enabled.
+- `MYSQL_SECURE=1` to run `mysql_secure_installation` (best-effort, may prompt).
+
+Example:
+```bash
+INSTALL_UFW=1 EXPOSE_API_PORT=1 MYSQL_SECURE=1 bash deployment/scripts/install-ubuntu-onprem.sh
+```
+
+Node.js is installed via the NodeSource LTS repo (`https://deb.nodesource.com/setup_lts.x`).
+
 ## Frontend apps (LAN dev)
 The frontend apps run via Vite and are bound to `0.0.0.0` so they can be opened from tablets and displays on the same LAN.
 
@@ -26,6 +44,12 @@ cp apps/admin/.env.example apps/admin/.env
 ```
 
 Edit each `.env`:
+```
+VITE_API_BASE_URL=https://<LAN_IP>/api
+VITE_WS_URL=https://<LAN_IP>
+```
+
+If you're not using nginx/TLS, set:
 ```
 VITE_API_BASE_URL=http://<LAN_IP>:3001
 VITE_WS_URL=http://<LAN_IP>:3001
@@ -83,6 +107,23 @@ server {
   }
 }
 ```
+
+## Optional HTTPS (Self-signed)
+Generate and enable a self-signed certificate for LAN HTTPS:
+```bash
+LAN_IP=192.168.1.10 CERT_HOSTNAME=claircoffee.local bash deployment/scripts/enable-selfsigned-tls.sh
+```
+
+This script:
+- Creates `/etc/ssl/private/claircoffee.key` and `/etc/ssl/certs/claircoffee.crt` with SAN entries.
+- Writes the nginx TLS server block (see `deployment/nginx/claircoffee-ssl.conf`).
+- Runs `nginx -t` and reloads nginx.
+
+Troubleshooting tips:
+- Validate config: `sudo nginx -t`
+- Ensure the TLS config is enabled: `/etc/nginx/sites-enabled/claircoffee-ssl.conf`
+- Confirm ports 80/443 are open (UFW or firewall rules).
+- WebSocket headers (`Upgrade`/`Connection`) are required for `/socket.io/`.
 
 ## Environment
 Copy `services/api/.env.example` to `.env` and update values.

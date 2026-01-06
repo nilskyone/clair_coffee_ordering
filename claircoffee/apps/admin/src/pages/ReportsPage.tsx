@@ -15,7 +15,12 @@ export const ReportsPage: React.FC = () => {
   });
 
   const downloadCsv = async (path: string, filename: string) => {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:3001"}${path}` , {
+    const defaultApiBaseUrl =
+      typeof window !== "undefined" && window.location.protocol === "https:"
+        ? `${window.location.origin}/api`
+        : "http://localhost:3001";
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl;
+    const response = await fetch(`${apiBaseUrl}${path}`, {
       headers: token ? { authorization: `Bearer ${token}` } : undefined
     });
     const blob = await response.blob();

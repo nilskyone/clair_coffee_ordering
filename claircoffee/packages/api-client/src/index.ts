@@ -261,8 +261,15 @@ export function createApiClient(options: ApiClientOptions) {
   };
 }
 
+function normalizeSocketBaseUrl(baseUrl: string) {
+  if (typeof window !== "undefined" && window.location.protocol === "https:" && baseUrl.startsWith("http://")) {
+    return baseUrl.replace("http://", "https://");
+  }
+  return baseUrl;
+}
+
 export function createSocketClient({ baseUrl, token, branchId }: SocketOptions): Socket {
-  const socket = io(baseUrl, {
+  const socket = io(normalizeSocketBaseUrl(baseUrl), {
     transports: ["websocket"],
     auth: token ? { token } : undefined
   });

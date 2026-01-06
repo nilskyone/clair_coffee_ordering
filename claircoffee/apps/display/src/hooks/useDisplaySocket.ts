@@ -2,7 +2,11 @@ import { useEffect } from "react";
 import { createSocketClient, OrderStatus } from "@claircoffee/api-client";
 import { useDisplayStore } from "../store/orders";
 
-const wsUrl = import.meta.env.VITE_WS_URL || "http://localhost:3001";
+const defaultWsUrl =
+  typeof window !== "undefined" && window.location.protocol === "https:"
+    ? window.location.origin
+    : "http://localhost:3001";
+const wsUrl = import.meta.env.VITE_WS_URL || defaultWsUrl;
 
 export function useDisplaySocket() {
   const updateStatus = useDisplayStore((state) => state.updateStatus);
